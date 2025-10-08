@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="bg.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Odyssey: An Interactive Journey</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'primary-dark': '#0a092d',
+            'secondary-dark': '#1c164d',
+            'accent-pink': '#ec4899',
+            'accent-blue': '#3b82f6',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'gradient-x': 'gradient-x 15s ease infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            'gradient-x': {
+              '0%, 100%': { 'background-position': '0% 50%' },
+              '50%': { 'background-position': '100% 50%' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+
+    .flip-card:hover .transform-style-3d,
+    .flip-card:focus-within .transform-style-3d {
+      transform: rotateY(180deg);
+    }
+
+    .prose {
+      max-width: 65ch;
+    }
+
+    .prose-invert {
+      color: inherit;
+    }
+
+    .prose-sm p {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .prose-sm h1,
+    .prose-sm h2,
+    .prose-sm h3 {
+      margin-top: 0.8em;
+      margin-bottom: 0.4em;
+    }
+    
+    /* Light theme improvements: make glass cards solid, increase contrast */
+    html:not(.dark) #header {
+      background-color: rgba(255, 255, 255, 0.85) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* "Glass" surfaces become solid white with subtle borders in light mode */
+    html:not(.dark) .bg-white\/5,
+    html:not(.dark) .bg-white\/10 {
+      background-color: #ffffff !important;
+      border-color: #e5e7eb !important; /* gray-200 */
+    }
+    html:not(.dark) .border-white\/10,
+    html:not(.dark) .border-white\/20 {
+      border-color: #e5e7eb !important; /* gray-200 */
+    }
+
+    /* Cards that use dark gradients get plain white in light mode */
+    html:not(.dark) .bg-gradient-to-br.from-secondary-dark.to-primary-dark {
+      background: #ffffff !important;
+      border-color: #e5e7eb !important;
+    }
+
+    /* Improve text contrast inside cards in light mode */
+    html:not(.dark) .bg-white\/5 .text-white,
+    html:not(.dark) .bg-white\/10 .text-white,
+    html:not(.dark) .bg-gradient-to-br.from-secondary-dark.to-primary-dark .text-white {
+      color: #0f172a !important; /* slate-900 */
+    }
+    html:not(.dark) .bg-white\/5 .text-gray-300,
+    html:not(.dark) .bg-white\/10 .text-gray-300,
+    html:not(.dark) .bg-gradient-to-br.from-secondary-dark.to-primary-dark .text-gray-300 {
+      color: #334155 !important; /* slate-700 */
+    }
+    html:not(.dark) .bg-white\/5 .text-gray-400,
+    html:not(.dark) .bg-white\/10 .text-gray-400 {
+      color: #475569 !important; /* slate-600 */
+    }
+  </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body
+  class="bg-gradient-to-br from-primary-light via-secondary-light to-white dark:bg-primary-dark text-gray-800 dark:text-gray-200 font-sans transition-colors duration-500">
+  <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-accent-pink to-accent-blue z-50"
+    style="width: 0%;"></div>
+
+  <header id="header"
+    class="fixed top-0 left-0 right-0 z-40 bg-white/30 dark:bg-primary-dark/30 backdrop-blur-lg border-b border-gray-200/20 dark:border-white/10">
+    <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <a href="#hero"
+        class="flex items-center space-x-2 text-xl font-display font-bold text-gray-800 dark:text-white cursor-pointer">
+        <img src="bg.png" alt="Company logo of AI Odyssey, representing the brand symbol" class="w-12 h-12">
+        <span>AI Odyssey</span>
+      </a>
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#what-is-ai"
+          class="nav-link font-medium text-gray-600 dark:text-gray-300 hover:text-accent-blue dark:hover:text-accent-pink transition-colors">What
+          is AI?</a>
+        <a href="#daily-life"
+          class="nav-link font-medium text-gray-600 dark:text-gray-300 hover:text-accent-blue dark:hover:text-accent-pink transition-colors">Daily
+          Life</a>
+        <a href="#future-ai"
+          class="nav-link font-medium text-gray-600 dark:text-gray-300 hover:text-accent-blue dark:hover:text-accent-pink transition-colors">Future</a>
+        <a href="#try-ai"
+          class="nav-link font-medium text-gray-600 dark:text-gray-300 hover:text-accent-blue dark:hover:text-accent-pink transition-colors">Try
+          AI</a>
+        <a href="#resources"
+          class="nav-link font-medium text-gray-600 dark:text-gray-300 hover:text-accent-blue dark:hover:text-accent-pink transition-colors">Resources</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="theme-toggle"
+          class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-secondary-dark transition-colors"
+          aria-label="Toggle theme">
+          <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400 hidden" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+        <div class="md:hidden">
+          <button id="mobile-menu-button" class="text-gray-800 dark:text-white focus:outline-none"
+            aria-label="Open menu">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden bg-white/80 dark:bg-primary-dark/80 backdrop-blur-lg">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="#what-is-ai"
+          class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-accent-blue dark:hover:text-accent-pink hover:bg-gray-50 dark:hover:bg-secondary-dark">What
+          is AI?</a>
+        <a href="#daily-life"
+          class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-accent-blue dark:hover:text-accent-pink hover:bg-gray-50 dark:hover:bg-secondary-dark">Daily
+          Life</a>
+        <a href="#future-ai"
+          class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-accent-blue dark:hover:text-accent-pink hover:bg-gray-50 dark:hover:bg-secondary-dark">Future</a>
+        <a href="#try-ai"
+          class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-accent-blue dark:hover:text-accent-pink hover:bg-gray-50 dark:hover:bg-secondary-dark">Try
+          AI</a>
+        <a href="#resources"
+          class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-accent-blue dark:hover:text-accent-pink hover:bg-gray-50 dark:hover:bg-secondary-dark">Resources</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="relative min-h-screen flex items-center overflow-hidden dark:bg-gradient-to-br dark:from-primary-dark dark:via-secondary-dark dark:to-primary-dark bg-white py-20 md:py-32">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,_rgba(59,130,246,0.05),_transparent_40%)] dark:bg-[radial-gradient(circle_at_center,_rgba(236,72,153,0.1),_transparent_40%)]"></div>
+            <div class="container mx-auto px-6 z-10">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center md:text-left dark:text-white text-slate-900">
+                        <h1 class="text-5xl md:text-7xl font-bold font-display leading-tight mb-4">
+                        Explore the
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-accent-pink to-accent-blue"> AI Odyssey</span>
+                        </h1>
+                        <p class="text-lg md:text-xl text-slate-600 dark:text-gray-300 mb-8 max-w-xl mx-auto md:mx-0">
+                        An immersive, interactive journey into the fascinating world of Artificial Intelligence. Discover its past, understand its present, and imagine its future.
+                        </p>
+                        <a href="#what-is-ai" class="inline-block bg-gradient-to-r from-accent-pink to-accent-blue text-white font-bold py-3 px-8 rounded-full text-lg hover:opacity-90 transition-transform transform hover:scale-105">
+                        Begin Your Journey
+                        </a>
+                    </div>
+                    <div class="w-full h-auto max-w-md mx-auto md:max-w-none animate-float text-slate-800 dark:text-white">
+                        <svg viewBox="0 0 300 300" class="w-full h-full"><defs><linearGradient id="line-grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6"></stop><stop offset="100%" stop-color="#ec4899"></stop></linearGradient><style>
+                            .node-pulse { animation: pulse-node 2s infinite ease-in-out; }
+                            @keyframes pulse-node { 0%, 100% { r: 8; opacity: 1; } 50% { r: 10; opacity: 0.7; } }
+                            .line-flow { stroke-dasharray: 10 5; animation: flow 4s linear infinite; }
+                            @keyframes flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 15; } }
+                        </style></defs><line x1="50" y1="50" x2="150" y2="100" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 0s;"></line><line x1="50" y1="150" x2="150" y2="100" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 0.2s;"></line><line x1="50" y1="150" x2="150" y2="200" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 0.4s;"></line><line x1="50" y1="250" x2="150" y2="200" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 0.6s;"></line><line x1="150" y1="100" x2="250" y2="50" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 0.8s;"></line><line x1="150" y1="100" x2="250" y2="150" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 1s;"></line><line x1="150" y1="200" x2="250" y2="150" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 1.2s;"></line><line x1="150" y1="200" x2="250" y2="250" stroke="url(#line-grad)" stroke-width="1" class="line-flow" style="animation-delay: 1.4s;"></line><circle cx="50" cy="50" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0s;"></circle><circle cx="50" cy="150" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.1s;"></circle><circle cx="50" cy="250" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.2s;"></circle><circle cx="150" cy="100" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.3s;"></circle><circle cx="150" cy="200" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.4s;"></circle><circle cx="250" cy="50" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.5s;"></circle><circle cx="250" cy="150" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.6s;"></circle><circle cx="250" cy="250" r="8" fill="currentColor" class="dark:text-white/80 node-pulse" style="animation-delay: 0.7s;"></circle></svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <section id="what-is-ai" class="py-20 md:py-32 bg-gray-100 dark:bg-primary-dark">
+      <div class="container mx-auto px-6">
+        <h2
+          class="text-4xl md:text-5xl font-bold font-display text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-pink">
+          What is AI?</h2>
+        <div class="max-w-4xl mx-auto text-center mb-16">
+          <p class="text-lg text-gray-600 dark:text-gray-300">Artificial Intelligence is a branch of computer science
+            that aims to create machines capable of intelligent behavior. It's about teaching computers to learn,
+            reason, perceive, and understand language, much like humans do.</p>
+        </div>
+        <h3 class="text-3xl font-bold font-display text-center mb-8 text-gray-800 dark:text-white">A Brief History of AI
+        </h3>
+        <div class="max-w-3xl mx-auto">
+          <!-- Timeline items will be listed here -->
+            <div class="relative pl-8 sm:pl-32 py-6 group">
+            <div
+              class="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-gray-300 dark:before:bg-gray-700 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-accent-blue after:border-4 after:box-content after:border-gray-50 dark:after:border-secondary-dark after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
+              <time
+                class="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-white bg-accent-blue rounded-full">1950</time>
+              <div class="text-xl font-bold font-display text-gray-800 dark:text-white">The Turing Test</div>
+            </div>
+            <div class="text-gray-600 dark:text-gray-400">Alan Turing proposes a test for machine intelligence, a
+              pivotal moment in AI philosophy.</div>
+          </div>
+          <div class="relative pl-8 sm:pl-32 py-6 group">
+            <div
+              class="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-gray-300 dark:before:bg-gray-700 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-accent-blue after:border-4 after:box-content after:border-gray-50 dark:after:border-secondary-dark after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
+              <time
+                class="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-white bg-accent-blue rounded-full">1956</time>
+              <div class="text-xl font-bold font-display text-gray-800 dark:text-white">Birth of "AI"</div>
+            </div>
+            <div class="text-gray-600 dark:text-gray-400">The term "Artificial Intelligence" is coined at the Dartmouth
+              Workshop.</div>
+          </div>
+          <div class="relative pl-8 sm:pl-32 py-6 group">
+            <div
+              class="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-gray-300 dark:before:bg-gray-700 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-accent-blue after:border-4 after:box-content after:border-gray-50 dark:after:border-secondary-dark after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
+              <time
+                class="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-white bg-accent-blue rounded-full">1997</time>
+              <div class="text-xl font-bold font-display text-gray-800 dark:text-white">Deep Blue vs. Kasparov</div>
+            </div>
+            <div class="text-gray-600 dark:text-gray-400">IBM's Deep Blue defeats world chess champion Garry Kasparov,
+              showcasing AI's strategic power.</div>
+          </div>
+          <div class="relative pl-8 sm:pl-32 py-6 group">
+            <div
+              class="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-gray-300 dark:before:bg-gray-700 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-accent-blue after:border-4 after:box-content after:border-gray-50 dark:after:border-secondary-dark after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
+              <time
+                class="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-white bg-accent-blue rounded-full">2011</time>
+              <div class="text-xl font-bold font-display text-gray-800 dark:text-white">Watson Wins Jeopardy!</div>
+            </div>
+            <div class="text-gray-600 dark:text-gray-400">IBM's Watson wins the quiz show, demonstrating natural
+              language processing capabilities.</div>
+          </div>
+          <div class="relative pl-8 sm:pl-32 py-6 group">
+            <div
+              class="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-gray-300 dark:before:bg-gray-700 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-accent-blue after:border-4 after:box-content after:border-gray-50 dark:after:border-secondary-dark after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
+              <time
+                class="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-white bg-accent-blue rounded-full">2016</time>
+              <div class="text-xl font-bold font-display text-gray-800 dark:text-white">AlphaGo's Victory</div>
+            </div>
+            <div class="text-gray-600 dark:text-gray-400">Google DeepMind's AlphaGo beats world Go champion Lee Sedol, a
+              milestone for deep reinforcement learning.</div>
+          </div>
+          <div class="relative pl-8 sm:pl-32 py-6 group">
+            <div
+              class="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-gray-300 dark:before:bg-gray-700 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-accent-blue after:border-4 after:box-content after:border-gray-50 dark:after:border-secondary-dark after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
+              <time
+                class="sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-white bg-accent-blue rounded-full">2020s</time>
+              <div class="text-xl font-bold font-display text-gray-800 dark:text-white">The Rise of Generative AI</div>
+            </div>
+            <div class="text-gray-600 dark:text-gray-400">Large Language Models (LLMs) and diffusion models become
+              widely accessible, transforming content creation and human-computer interaction.</div>
+          </div>
+        </div>
+        <h3 class="text-3xl font-bold font-display text-center my-16 text-gray-800 dark:text-white">Core Concepts</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 h-full transform hover:scale-105 hover:border-accent-pink transition-all duration-300 shadow-lg">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-accent-blue/20 rounded-lg mr-4"><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-accent-pink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg></div>
+              <h3 class="text-xl font-bold font-display text-white">Supervised Learning</h3>
+            </div>
+            <p class="text-gray-300">Training a model on labeled data, like showing it pictures of cats labeled "cat" to
+              teach it to recognize cats.</p>
+          </div>
+          <div
+            class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 h-full transform hover:scale-105 hover:border-accent-pink transition-all duration-300 shadow-lg">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-accent-blue/20 rounded-lg mr-4"><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-accent-pink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg></div>
+              <h3 class="text-xl font-bold font-display text-white">Unsupervised Learning</h3>
+            </div>
+            <p class="text-gray-300">The model finds hidden patterns in unlabeled data, like grouping customers based on
+              purchasing habits without prior categories.</p>
+          </div>
+          <div
+            class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 h-full transform hover:scale-105 hover:border-accent-pink transition-all duration-300 shadow-lg">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-accent-blue/20 rounded-lg mr-4"><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-accent-pink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg></div>
+              <h3 class="text-xl font-bold font-display text-white">Reinforcement Learning</h3>
+            </div>
+            <p class="text-gray-300">An agent learns by trial and error, receiving rewards or penalties for its actions,
+              like teaching an AI to play a game.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="daily-life" class="py-20 md:py-32 bg-gray-200 dark:bg-secondary-dark">
+      <div class="container mx-auto px-6">
+        <h2
+          class="text-4xl md:text-5xl font-bold font-display text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-pink">
+          AI in Daily Life</h2>
+        <p class="text-lg text-center max-w-3xl mx-auto mb-12 text-gray-600 dark:text-gray-300">
+          You might be surprised how often you interact with AI. From your morning commute to your evening
+          entertainment, AI is working behind the scenes to make life easier and more efficient.
+        </p>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="w-full h-auto rounded-2xl bg-gradient-to-br from-secondary-dark to-primary-dark border border-white/10 shadow-xl p-6">
+            <div class="p-4 bg-accent-pink/20 rounded-full mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent-pink" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 10h1l2.68 5.39a2 2 0 001.71 1.11h9.72a2 2 0 001.71-1.11L21 10h1M5 6h14l1 5H4l1-5zM16 16a2 2 0 11-4 0 2 2 0 014 0zm-6 0a2 2 0 11-4 0 2 2 0 014 0z">
+                </path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold font-display text-white mb-4">Voice Assistants</h3>
+            <p class="text-gray-300">Using Natural Language Processing (NLP) to understand and respond to your voice
+              commands, like setting timers or playing music.</p>
+          </div>
+
+          <div
+            class="w-full h-auto rounded-2xl bg-gradient-to-br from-secondary-dark to-primary-dark border border-white/10 shadow-xl p-6">
+            <div class="p-4 bg-accent-pink/20 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent-pink" fill="none" viewBox="0 0 24 24" 
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-2.46 10.87a6 6 0 0 1-8.5-8.5a6 6 0 0 1 10.86-2.47l-3.77 3.77l-1.6-1.6a1 1 0 0 0-1.4 0l-.6.6a1 1 0 0 0 0 1.4l3.3 3.3a1 1 0 0 0 1.4 0l.6-.6a1 1 0 0 0 0-1.4L16.1 9.7l3.7-3.7a1 1 0 0 0-1.4-1.4l-3.7 3.7z"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold font-display text-white mb-4">Recommendation Engines</h3>
+            <p class="text-gray-300">Algorithms analyze your past behavior to suggest movies, products, or music you
+              might like, personalizing your experience.</p>
+          </div>
+
+          <div
+            class="w-full h-auto rounded-2xl bg-gradient-to-br from-secondary-dark to-primary-dark border border-white/10 shadow-xl p-6">
+            <div class="p-4 bg-accent-pink/20 rounded-full mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent-pink" fill="none" viewBox="0 0 24 24" 
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                </path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold font-display text-white mb-4">Medical Diagnosis</h3>
+            <p class="text-gray-300">AI models analyze medical images like X-rays and MRIs to help doctors detect
+              diseases earlier and more accurately.</p>
+          </div>
+
+          <div
+            class="w-full h-auto rounded-2xl bg-gradient-to-br from-secondary-dark to-primary-dark border border-white/10 shadow-xl p-6">
+            <div class="p-4 bg-accent-pink/20 rounded-full mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent-pink" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold font-display text-white mb-4">Spam Filters</h3>
+            <p class="text-gray-300">Machine learning classifies emails as spam or not-spam based on content and sender
+              patterns, keeping your inbox clean.</p>
+          </div>
+
+          <div
+            class="w-full h-auto rounded-2xl bg-gradient-to-br from-secondary-dark to-primary-dark border border-white/10 shadow-xl p-6">
+            <div class="p-4 bg-accent-pink/20 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent-pink" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7">
+                </path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold font-display text-white mb-4">Navigation Apps</h3>
+            <p class="text-gray-300">AI analyzes real-time traffic data to calculate the fastest route, predict your
+              arrival time, and avoid congestion.</p>
+          </div>
+
+          <div
+            class="w-full h-auto rounded-2xl bg-gradient-to-br from-secondary-dark to-primary-dark border border-white/10 shadow-xl p-6">
+            <div class="p-4 bg-accent-pink/20 rounded-full mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent-pink" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold font-display text-white mb-4">Facial Recognition</h3>
+            <p class="text-gray-300">Used for unlocking your phone or tagging friends in photos, AI identifies unique
+              facial features from images or videos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="future-ai" class="py-20 md:py-32 bg-gray-100 dark:bg-primary-dark">
+      <div class="container mx-auto px-6">
+        <h2
+          class="text-4xl md:text-5xl font-bold font-display text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-pink">
+          The Future of AI</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 shadow-lg">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-accent-blue/20 rounded-lg mr-4"><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-accent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                  </path>
+                </svg></div>
+              <h3 class="text-xl font-bold font-display text-white">Career Opportunities</h3>
+            </div>
+            <p class="text-gray-300">The AI boom is creating a massive demand for skilled professionals. Fields like
+              machine learning engineering, data science, and AI ethics are expanding rapidly, offering exciting and
+              lucrative career paths.</p>
+          </div>
+          <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 shadow-lg">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-accent-blue/20 rounded-lg mr-4"><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-accent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3">
+                  </path>
+                </svg></div>
+              <h3 class="text-xl font-bold font-display text-white">Ethical Considerations</h3>
+            </div>
+            <p class="text-gray-300">As AI becomes more powerful, we must address crucial ethical questions about bias,
+              privacy, and accountability. Developing fair and transparent AI is one of the biggest challenges for the
+              next decade.</p>
+          </div>
+          <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 shadow-lg">
+            <div class="flex items-center mb-4">
+              <div class="p-2 bg-accent-blue/20 rounded-lg mr-4"><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-accent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a11.955 11.955 0 0118 0 12.02 12.02 0 00-2.382-8.984z">
+                  </path>
+                </svg></div>
+              <h3 class="text-xl font-bold font-display text-white">Transforming Industries</h3>
+            </div>
+            <p class="text-gray-300">AI is set to revolutionize every industry, from personalized medicine and
+              autonomous transportation to creative arts and scientific discovery. The potential for positive impact is
+              immense.</p>
+          </div>
+        </div>
+        <h3 class="text-3xl font-bold font-display text-center mb-8 text-gray-800 dark:text-white">Projected Growth in
+          AI Careers</h3>
+        <div
+          class="w-full h-96 bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 shadow-lg overflow-x-auto">
+          <div class="h-full min-w-[500px] flex justify-around items-end gap-2 md:gap-4 text-gray-700 dark:text-white/70">
+            <div class="flex flex-col items-center h-full w-full justify-end group">
+              <div class="w-full bg-accent-blue/70 dark:bg-accent-blue/50 group-hover:bg-accent-blue transition-colors rounded-t-lg"
+                style="height: 85%;"></div>
+              <div class="text-xs md:text-sm pt-2 text-center">Data Scientist</div>
+            </div>
+            <div class="flex flex-col items-center h-full w-full justify-end group">
+              <div class="w-full bg-accent-blue/80 dark:bg-accent-blue/50 group-hover:bg-accent-blue transition-colors rounded-t-lg"
+                style="height: 95%;"></div>
+              <div class="text-xs md:text-sm pt-2 text-center">ML Engineer</div>
+            </div>
+            <div class="flex flex-col items-center h-full w-full justify-end group">
+              <div class="w-full bg-accent-blue/60 dark:bg-accent-blue/50 group-hover:bg-accent-blue transition-colors rounded-t-lg"
+                style="height: 75%;"></div>
+              <div class="text-xs md:text-sm pt-2 text-center">AI Researcher</div>
+            </div>
+            <div class="flex flex-col items-center h-full w-full justify-end group">
+              <div class="w-full bg-accent-blue/50 dark:bg-accent-blue/50 group-hover:bg-accent-blue transition-colors rounded-t-lg"
+                style="height: 65%;"></div>
+              <div class="text-xs md:text-sm pt-2 text-center">Robotics</div>
+            </div>
+            <div class="flex flex-col items-center h-full w-full justify-end group">
+              <div class="w-full bg-accent-blue/90 dark:bg-accent-blue/50 group-hover:bg-accent-blue transition-colors rounded-t-lg"
+                style="height: 90%;"></div>
+              <div class="text-xs md:text-sm pt-2 text-center">AI Ethicist</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="try-ai" class="py-20 md:py-32 bg-gray-200 dark:bg-secondary-dark relative overflow-hidden">
+      <div
+        class="absolute -bottom-1/2 -left-1/4 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.15),_transparent_40%)]">
+      </div>
+      <div
+        class="absolute -top-1/2 -right-1/4 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(236,72,153,0.1),_transparent_40%)]">
+      </div>
+      <div class="relative z-10 container mx-auto px-6">
+        <h2
+          class="text-4xl md:text-5xl font-bold font-display text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-pink">
+          Try AI Yourself</h2>
+        <p class="text-lg text-center max-w-3xl mx-auto mb-12 text-gray-600 dark:text-gray-300">
+          Have a question about AI? Curious about a specific concept? Chat with our friendly AI chatbot Alexios, powered
+          by
+          Thinkstack AI model. Get simple, clear answers to your complex questions.
+        </p>
+
+        <div
+          class="w-full max-w-2xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+          <iframe src="https://app.thinkstack.ai/bot/index.html?chatbot_id=68e6356e1dec4e6496e76a56&type=inline"
+            frameborder="0" width="100%" height="100%" style="min-height: 500px;" class="rounded-2xl">
+          </iframe>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="resources" class="py-20 md:py-32 bg-gray-100 dark:bg-primary-dark">
+      <div class="container mx-auto px-6">
+        <h2
+          class="text-4xl md:text-5xl font-bold font-display text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-accent-blue to-accent-pink">
+          Further Learning</h2>
+        <p class="text-lg text-center max-w-3xl mx-auto mb-12 text-gray-600 dark:text-gray-300">
+          Your journey doesn't have to end here. Explore these curated resources to continue learning about the exciting
+          world of Artificial Intelligence.
+        </p>
+        <div class="max-w-2xl mx-auto">
+          <div class="space-y-4">
+            <a href="https://ai.google/" target="_blank" rel="noopener noreferrer"
+              class="block bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:border-accent-blue transition-all duration-300 group">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">Google AI</h3>
+                  <p class="text-gray-400">Explore the latest research, tools, and news from Google AI.</p>
+                </div><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-gray-400 group-hover:text-accent-blue transition-colors" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </div>
+            </a>
+            <a href="https://deepmind.google/" target="_blank" rel="noopener noreferrer"
+              class="block bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:border-accent-blue transition-all duration-300 group">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">DeepMind</h3>
+                  <p class="text-gray-400">Leading AI research lab, now part of Google, pushing the boundaries of
+                    science.</p>
+                </div><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-gray-400 group-hover:text-accent-blue transition-colors" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </div>
+            </a>
+            <a href="https://www.coursera.org/learn/ai-for-everyone" target="_blank" rel="noopener noreferrer"
+              class="block bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:border-accent-blue transition-all duration-300 group">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">Coursera - AI
+                    For Everyone</h3>
+                  <p class="text-gray-400">A non-technical course by Andrew Ng that provides a broad understanding of
+                    AI.</p>
+                </div><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-gray-400 group-hover:text-accent-blue transition-colors" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </div>
+            </a>
+            <a href="https://www.technologyreview.com/artificial-intelligence/" target="_blank"
+              rel="noopener noreferrer"
+              class="block bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:border-accent-blue transition-all duration-300 group">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-lg font-bold text-white group-hover:text-accent-blue transition-colors">MIT Technology
+                    Review - AI</h3>
+                  <p class="text-gray-400">In-depth articles and analysis on the latest trends in Artificial
+                    Intelligence.</p>
+                </div><svg xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-gray-400 group-hover:text-accent-blue transition-colors" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-200 dark:bg-secondary-dark border-t border-gray-300 dark:border-white/10">
+    <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+      <div class="flex justify-center items-center space-x-2 mb-4">
+        <img src="bg.png" alt="Company logo of AI Odyssey, representing the brand symbol" class="w-12 h-12">
+        <span class="text-xl font-display font-bold text-gray-800 dark:text-white">AI Odyssey</span>
+      </div>
+      <p>An interactive journey into the world of Artificial Intelligence.</p>
+      <p class="mt-4 text-sm">&copy; 2025 AI Odyssey. All rights reserved by The ICT Society of St. Sylvester's College.
+        Created for SPLENDOUR '25.</p>
+    </div>
+  </footer>
+  <script type="module" src="index.js"></script>
+</body>
+
+</html>
